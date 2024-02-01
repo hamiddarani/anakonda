@@ -26,8 +26,6 @@ If you like this repo or found it helpful, please give it a star. Thanks!
 
 ## How to run
 
-### Docker start
-
 ```
 go run main.go server
 go run main.go controller
