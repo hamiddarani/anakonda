@@ -29,7 +29,9 @@ If you like this repo or found it helpful, please give it a star. Thanks!
 ### Docker start
 
 ```
-docker compose -f "docker/docker-compose.yml" up -d --build
+go run main.go server
+go run main.go controller
+go run main.go worker
 ```
 
 #### Web API
