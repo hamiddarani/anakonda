@@ -1,0 +1,160 @@
+definitions:
+  dto.CreateTaskRequest:
+    properties:
+      image:
+        maxLength: 256
+        type: string
+      name:
+        maxLength: 256
+        type: string
+      namespace:
+        maxLength: 64
+        type: string
+      runtime:
+        maxLength: 32
+        type: string
+      script:
+        maxLength: 1000
+        type: string
+    required:
+    - image
+    - name
+    - namespace
+    - runtime
+    - script
+    type: object
+  dto.CreateTaskResponse:
+    properties:
+      id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      result:
+        type: string
+      runtime:
+        type: string
+      script:
+        type: string
+      status:
+        type: string
+    type: object
+  helper.BaseHttpResponse:
+    properties:
+      error: {}
+      result: {}
+      resultCode:
+        $ref: '#/definitions/helper.ResultCode'
+      success:
+        type: boolean
+      validationErrors:
+        items:
+          $ref: '#/definitions/helper.ValidationError'
+        type: array
+    type: object
+  helper.ResultCode:
+    enum:
+    - 0
+    - 40000
+    - 40001
+    - 40401
+    - 50001
+    - 50002
+    - 50003
+    type: integer
+    x-enum-varnames:
+    - Success
+    - BadRequestError
+    - ValidationErrorCode
+    - NotFoundError
+    - CustomRecovery
+    - InternalError
+    - DBConnectionError
+  helper.ValidationError:
+    properties:
+      property:
+        type: string
+      tag:
+        type: string
+      value:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/health:
+    get:
+      consumes:
+      - Application/json
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      summary: Show the status of server.
+      tags:
+      - root
+  /v1/tasks:
+    post:
+      consumes:
+      - application/json
+      description: Create a Task
+      parameters:
+      - description: Create a Task
+        in: body
+        name: Request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTaskRequest'
+      responses:
+        "201":
+          description: Task response
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/dto.CreateTaskResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      summary: Create a Task
+      tags:
+      - Task
+  /v1/tasks/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Task
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Task response
+          schema:
+            allOf:
+            - $ref: '#/definitions/helper.BaseHttpResponse'
+            - properties:
+                result:
+                  $ref: '#/definitions/dto.CreateTaskResponse'
+              type: object
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/helper.BaseHttpResponse'
+      summary: Get Task
+      tags:
+      - Task
+swagger: "2.0"

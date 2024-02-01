@@ -1,0 +1,244 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/v1/health": {
+            "get": {
+                "description": "get the status of server.",
+                "consumes": [
+                    "Application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Show the status of server.",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/tasks": {
+            "post": {
+                "description": "Create a Task",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Create a Task",
+                "parameters": [
+                    {
+                        "description": "Create a Task",
+                        "name": "Request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Task response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/dto.CreateTaskResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/tasks/{id}": {
+            "get": {
+                "description": "Get Task",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get Task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Task response",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/helper.BaseHttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "result": {
+                                            "$ref": "#/definitions/dto.CreateTaskResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/helper.BaseHttpResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.CreateTaskRequest": {
+            "type": "object",
+            "required": [
+                "image",
+                "name",
+                "namespace",
+                "runtime",
+                "script"
+            ],
+            "properties": {
+                "image": {
+                    "type": "string",
+                    "maxLength": 256
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 256
+                },
+                "namespace": {
+                    "type": "string",
+                    "maxLength": 64
+                },
+                "runtime": {
+                    "type": "string",
+                    "maxLength": 32
+                },
+                "script": {
+                    "type": "string",
+                    "maxLength": 1000
+                }
+            }
+        },
+        "dto.CreateTaskResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                },
+                "runtime": {
+                    "type": "string"
+                },
+                "script": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "helper.BaseHttpResponse": {
+            "type": "object",
+            "properties": {
+                "error": {},
+                "result": {},
+                "resultCode": {
+                    "$ref": "#/definitions/helper.ResultCode"
+                },
+                "success": {
+                    "type": "boolean"
+                },
+                "validationErrors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/helper.ValidationError"
+                    }
+                }
+            }
+        },
+        "helper.ResultCode": {
+            "type": "integer",
+            "enum": [
+                0,
+                40000,
+                40001,
+                40401,
+                50001,
+                50002,
+                50003
+            ],
+            "x-enum-varnames": [
+                "Success",
+                "BadRequestError",
+                "ValidationErrorCode",
+                "NotFoundError",
+                "CustomRecovery",
+                "InternalError",
+                "DBConnectionError"
+            ]
+        },
+        "helper.ValidationError": {
+            "type": "object",
+            "properties": {
+                "property": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
